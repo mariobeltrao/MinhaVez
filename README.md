@@ -20,7 +20,9 @@ Para abrir a interface gráfica:
 mvn javafx:run
 ```
 
-Na tela inicial, escolha a população, o período de 1, 7 ou 28 dias e a seed. A simulação executa primeiro o cenário **SEM rodízio** e depois o cenário **COM rodízio**, sempre com a mesma população-base. O painel permite pausar, continuar ou encerrar a execução e selecionar velocidades de 1×, 2×, 4×, 8×, 16× ou máxima. Ao final, a tela de resultados apresenta métricas comparativas, séries temporais reais, ocupação regional e as vias mais utilizadas.
+O aplicativo abre diretamente no dashboard. O botão **Configurações** reúne população, período de 1, 7 ou 28 dias e seed; antes do início, um diálogo confirma esses valores. Os cenários **SEM rodízio** e **COM rodízio** são executados concorrentemente sobre a mesma população-base e publicados em pares do mesmo dia e horário. O seletor superior permite observar cada cenário ou os dois mapas lado a lado em **COMPARAÇÃO**.
+
+O painel permite pausar, continuar, parar e selecionar velocidades de 1×, 2×, 4×, 8×, 16× ou máxima. A timeline funciona como replay: arrastá-la pausa a execução e mostra um checkpoint já processado, com resolução de cinco minutos; ela nunca permite avançar além do último instante conhecido. **Voltar ao mais recente** retorna ao estado live, e **Continuar** retoma o processamento desse ponto mais recente — o motor não é executado ao contrário. Ao final, a tela de resultados apresenta métricas comparativas, séries temporais reais, ocupação regional e as vias mais utilizadas.
 
 O mapa da interface representa o grafo fictício de 40 pontos e 64 vias. As cores das vias indicam `LIVRE`, `MODERADO`, `INTENSO`, `CONGESTIONADO`, `SEVERO` e `COLAPSO`; os veículos mostrados são uma amostra visual determinística de até 125 unidades, enquanto todas as unidades continuam sendo processadas pelo motor.
 
@@ -172,7 +174,7 @@ Sequência de leitura sugerida: `Ponto`/`Via` → `Cidade`/`FabricaCidade` → `
 mvn test
 ```
 
-Os 59 testes cobrem topologia, limites das faixas de ocupação, Dijkstra, reprodutibilidade, cópias independentes, população, ciclo do rodízio, estados, métricas, terminal, snapshots, controle assíncrono e integração para 1/7/28 dias. Há cenários controlados com sobrecarga para validar velocidades, partidas simultâneas, alteração de rota na volta, ausência de recálculo no percurso, movimento entre vias e encerramento às 23h. Veja [docs/TESTES.md](docs/TESTES.md) para o mapeamento dos requisitos.
+Os 63 testes cobrem topologia, limites das faixas de ocupação, Dijkstra, reprodutibilidade, cópias independentes, população, ciclo do rodízio, estados, métricas, terminal, snapshots, sincronização dos cenários, histórico de replay, controle assíncrono e integração para 1/7/28 dias. Há cenários controlados com sobrecarga para validar velocidades, partidas simultâneas, alteração de rota na volta, ausência de recálculo no percurso, movimento entre vias e encerramento às 23h. Veja [docs/TESTES.md](docs/TESTES.md) para o mapeamento dos requisitos.
 
 ## Limitações atuais e evoluções possíveis
 

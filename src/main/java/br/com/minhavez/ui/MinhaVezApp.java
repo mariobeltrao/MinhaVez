@@ -1,6 +1,5 @@
 package br.com.minhavez.ui;
 
-import br.com.minhavez.ui.controller.InicioController;
 import br.com.minhavez.ui.controller.SimulacaoController;
 import br.com.minhavez.ui.controller.ResultadoController;
 import javafx.application.Application;
@@ -22,29 +21,17 @@ public final class MinhaVezApp extends Application {
         janela.setMinWidth(1024);
         janela.setMinHeight(700);
         janela.setOnCloseRequest(evento -> encerrarSimulacao());
-        mostrarInicio();
+        mostrarDashboard();
         janela.show();
     }
 
-    private void mostrarInicio() throws IOException {
+    private void mostrarDashboard() throws IOException {
         encerrarSimulacao();
-        FXMLLoader loader = carregar("inicio.fxml");
+        FXMLLoader loader = carregar("simulacao.fxml");
         Parent raiz = loader.load();
-        InicioController controller = loader.getController();
-        controller.configurar(this::iniciarSimulacao);
+        simulacaoController = loader.getController();
         trocarCena(raiz);
-    }
-
-    private void iniciarSimulacao(ConfiguracaoUi configuracao) {
-        try {
-            FXMLLoader loader = carregar("simulacao.fxml");
-            Parent raiz = loader.load();
-            simulacaoController = loader.getController();
-            trocarCena(raiz);
-            simulacaoController.configurar(configuracao, this::simulacaoConcluida);
-        } catch (IOException erro) {
-            throw new IllegalStateException("Não foi possível abrir a simulação", erro);
-        }
+        simulacaoController.configurar(this::simulacaoConcluida);
     }
 
     private void simulacaoConcluida(ResultadoExecucao resultado) {
@@ -54,7 +41,7 @@ public final class MinhaVezApp extends Application {
             Parent raiz = loader.load();
             ResultadoController controller = loader.getController();
             controller.configurar(resultado, () -> {
-                try { mostrarInicio(); }
+                try { mostrarDashboard(); }
                 catch (IOException erro) { throw new IllegalStateException(erro); }
             });
             janela.setTitle("Minha Vez — comparação concluída");

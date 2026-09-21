@@ -62,6 +62,18 @@
 .scenario-badge, .state-badge { -fx-background-color: -mv-surface-alt; -fx-padding: 6px 10px; -fx-background-radius: 5px; -fx-font-weight: 700; }
 .state-badge { -fx-text-fill: -mv-primary; }
 .status-message { -fx-text-fill: -mv-muted; }
+.scenario-button {
+    -fx-background-color: transparent;
+    -fx-border-color: -mv-border;
+    -fx-text-fill: -mv-muted;
+    -fx-padding: 7px 18px;
+    -fx-font-weight: 700;
+}
+.scenario-button:hover, .scenario-button:selected {
+    -fx-background-color: -mv-surface-alt;
+    -fx-border-color: -mv-primary;
+    -fx-text-fill: -mv-text;
+}
 .map-panel { -fx-padding: 8px; }
 .mapa-cidade { -fx-background-color: #0d1724; -fx-background-radius: 9px; }
 .mapa-regiao { -fx-text-fill: #61788e; -fx-font-size: 12px; -fx-font-weight: 800; -fx-letter-spacing: 2px; }
@@ -90,13 +102,25 @@
 .progress-bar > .track { -fx-background-color: -mv-bg; -fx-background-radius: 3px; }
 .progress-bar > .bar { -fx-background-color: -mv-primary; -fx-background-radius: 3px; -fx-padding: 3px; }
 .control-deck { -fx-background-color: -mv-surface; -fx-padding: 10px 18px 14px; -fx-border-color: -mv-border transparent transparent transparent; }
+.comparison-side { -fx-min-width: 360px; }
+.comparison-title { -fx-font-weight: 800; -fx-text-fill: -mv-primary; }
+.comparison-metrics { -fx-background-color: -mv-surface; -fx-padding: 10px 14px; -fx-background-radius: 7px; }
+.comparison-value { -fx-font-size: 16px; -fx-font-weight: 800; }
 .peak-label { -fx-text-fill: -mv-primary; -fx-font-size: 10px; }
 .control-button, .danger-button, .speed-button { -fx-background-color: -mv-surface-alt; -fx-text-fill: -mv-text; -fx-padding: 8px 12px; -fx-background-radius: 5px; -fx-font-weight: 700; }
 .control-button:hover, .speed-button:hover, .speed-button:selected { -fx-background-color: -mv-primary; -fx-text-fill: #07131c; }
 .danger-button { -fx-text-fill: -mv-danger; }
 .danger-button:hover { -fx-background-color: -mv-danger; -fx-text-fill: #07131c; }
-.timeline > .bar { -fx-padding: 4px; }
+.timeline-slider .track { -fx-background-color: -mv-border; -fx-pref-height: 6px; }
+.timeline-slider .thumb { -fx-background-color: -mv-primary; -fx-pref-width: 16px; -fx-pref-height: 16px; }
+.processed-progress > .track { -fx-padding: 1px; -fx-background-color: -mv-bg; }
+.processed-progress > .bar { -fx-padding: 1px; -fx-background-color: -mv-muted; }
 .tooltip { -fx-background-color: -mv-surface-alt; -fx-text-fill: -mv-text; -fx-font-size: 12px; }
+
+.dialog-pane { -fx-background-color: -mv-surface; }
+.dialog-pane > .header-panel { -fx-background-color: -mv-surface-alt; }
+.dialog-pane .button-bar .button { -fx-background-color: -mv-surface-alt; -fx-text-fill: -mv-text; }
+.dialog-pane .button-bar .button:hover { -fx-background-color: -mv-primary; -fx-text-fill: #07131c; }
 
 .results-scroll, .results-scroll > .viewport { -fx-background-color: -mv-bg; }
 .results-content { -fx-background-color: -mv-bg; }

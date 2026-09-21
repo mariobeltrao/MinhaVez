@@ -18,7 +18,7 @@ public final class MapaCidade extends Pane {
 
     public MapaCidade() {
         getStyleClass().add("mapa-cidade");
-        setMinSize(520, 500);
+        setMinSize(320, 300);
     }
 
     public void aplicar(SnapshotSimulacao snapshot) {

@@ -7,60 +7,95 @@
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="br.com.minhavez.ui.controller.SimulacaoController" styleClass="app-background,simulation-root">
     <top>
-        <VBox spacing="8" styleClass="topbar">
-            <HBox alignment="CENTER_LEFT" spacing="24">
+        <VBox spacing="9" styleClass="topbar">
+            <HBox alignment="CENTER_LEFT" spacing="18">
+                <Button fx:id="configuracoesButton" text="⚙  CONFIGURAÇÕES" onAction="#abrirConfiguracoes" styleClass="control-button"/>
+                <Region HBox.hgrow="ALWAYS"/>
                 <Label text="MINHA VEZ" styleClass="top-brand"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label fx:id="diaLabel" text="Dia -- / --" styleClass="top-value"/>
                 <Label fx:id="horarioLabel" text="05:00" styleClass="clock-value"/>
-                <Label fx:id="cenarioLabel" text="PREPARANDO" styleClass="scenario-badge"/>
                 <Label fx:id="estadoLabel" text="PRONTO" styleClass="state-badge"/>
             </HBox>
-            <Label fx:id="mensagemLabel" text="Preparando cenário-base..." styleClass="status-message"/>
+            <HBox alignment="CENTER" spacing="8">
+                <fx:define><ToggleGroup fx:id="modoGroup"/></fx:define>
+                <ToggleButton text="SEM RODÍZIO" userData="SEM" toggleGroup="$modoGroup" styleClass="scenario-button"/>
+                <ToggleButton text="COM RODÍZIO" userData="COM" toggleGroup="$modoGroup" styleClass="scenario-button"/>
+                <ToggleButton text="COMPARAÇÃO" userData="COMPARACAO" selected="true" toggleGroup="$modoGroup" styleClass="scenario-button"/>
+            </HBox>
+            <Label fx:id="mensagemLabel" text="Ajuste as configurações ou inicie com os valores padrão." styleClass="status-message"/>
         </VBox>
     </top>
     <center>
-        <HBox spacing="14" BorderPane.alignment="CENTER">
-            <StackPane fx:id="mapaHost" HBox.hgrow="ALWAYS" styleClass="panel,map-panel"/>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="340" minWidth="310" maxWidth="390" styleClass="sidebar-scroll">
-                <VBox spacing="12" styleClass="sidebar">
-                    <Label text="MÉTRICAS INSTANTÂNEAS" styleClass="section-kicker"/>
-                    <GridPane hgap="10" vgap="10">
-                        <columnConstraints><ColumnConstraints percentWidth="50"/><ColumnConstraints percentWidth="50"/></columnConstraints>
-                        <VBox styleClass="metric-card"><Label text="VEÍCULOS CIRCULANDO" styleClass="metric-name"/><Label fx:id="circulandoLabel" text="0" styleClass="metric-value"/></VBox>
-                        <VBox GridPane.columnIndex="1" styleClass="metric-card"><Label text="VELOCIDADE MÉDIA" styleClass="metric-name"/><Label fx:id="velocidadeLabel" text="0 km/h" styleClass="metric-value-small"/></VBox>
-                        <VBox GridPane.rowIndex="1" styleClass="metric-card"><Label text="OCUPAÇÃO MÉDIA" styleClass="metric-name"/><Label fx:id="ocupacaoLabel" text="0%" styleClass="metric-value-small"/></VBox>
-                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="metric-card"><Label text="VIAS &gt; 100%" styleClass="metric-name"/><Label fx:id="viasAcimaLabel" text="0" styleClass="metric-value"/></VBox>
+        <StackPane>
+            <HBox fx:id="individualPane" visible="false" managed="false" spacing="14">
+                <StackPane fx:id="mapaHost" HBox.hgrow="ALWAYS" styleClass="panel,map-panel"/>
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="340" minWidth="310" maxWidth="390" styleClass="sidebar-scroll">
+                    <VBox spacing="12" styleClass="sidebar">
+                        <Label fx:id="cenarioLabel" text="SEM RODÍZIO" styleClass="section-kicker"/>
+                        <GridPane hgap="10" vgap="10">
+                            <columnConstraints><ColumnConstraints percentWidth="50"/><ColumnConstraints percentWidth="50"/></columnConstraints>
+                            <VBox styleClass="metric-card"><Label text="VEÍCULOS CIRCULANDO" styleClass="metric-name"/><Label fx:id="circulandoLabel" text="0" styleClass="metric-value"/></VBox>
+                            <VBox GridPane.columnIndex="1" styleClass="metric-card"><Label text="VELOCIDADE MÉDIA" styleClass="metric-name"/><Label fx:id="velocidadeLabel" text="0 km/h" styleClass="metric-value-small"/></VBox>
+                            <VBox GridPane.rowIndex="1" styleClass="metric-card"><Label text="OCUPAÇÃO MÉDIA" styleClass="metric-name"/><Label fx:id="ocupacaoLabel" text="0%" styleClass="metric-value-small"/></VBox>
+                            <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="metric-card"><Label text="VIAS &gt; 100%" styleClass="metric-name"/><Label fx:id="viasAcimaLabel" text="0" styleClass="metric-value"/></VBox>
+                        </GridPane>
+                        <VBox spacing="8" styleClass="panel,side-panel">
+                            <Label text="RODÍZIO" styleClass="section-kicker"/>
+                            <HBox><Label text="Estado" styleClass="side-key"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="rodizioLabel" text="DESATIVADO" styleClass="side-value"/></HBox>
+                            <HBox><Label text="Grupo restrito" styleClass="side-key"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="grupoLabel" text="NENHUM" styleClass="side-value"/></HBox>
+                            <HBox><Label text="Veículos restritos" styleClass="side-key"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="restritosLabel" text="0" styleClass="side-value"/></HBox>
+                        </VBox>
+                        <VBox spacing="9" styleClass="panel,side-panel">
+                            <Label text="OCUPAÇÃO POR REGIÃO" styleClass="section-kicker"/>
+                            <HBox><Label text="NORTE" styleClass="region-name"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="norteLabel" text="0%"/></HBox><ProgressBar fx:id="norteBar" maxWidth="Infinity" progress="0"/>
+                            <HBox><Label text="LESTE" styleClass="region-name"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="lesteLabel" text="0%"/></HBox><ProgressBar fx:id="lesteBar" maxWidth="Infinity" progress="0"/>
+                            <HBox><Label text="CENTRO" styleClass="region-name"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="centroLabel" text="0%"/></HBox><ProgressBar fx:id="centroBar" maxWidth="Infinity" progress="0"/>
+                            <HBox><Label text="SUL" styleClass="region-name"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="sulLabel" text="0%"/></HBox><ProgressBar fx:id="sulBar" maxWidth="Infinity" progress="0"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </HBox>
+
+            <HBox fx:id="comparacaoPane" spacing="12">
+                <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="comparison-side">
+                    <Label text="SEM RODÍZIO" styleClass="comparison-title"/>
+                    <StackPane fx:id="mapaSemHost" VBox.vgrow="ALWAYS" styleClass="panel,map-panel"/>
+                    <GridPane hgap="12" styleClass="comparison-metrics">
+                        <columnConstraints><ColumnConstraints percentWidth="33"/><ColumnConstraints percentWidth="33"/><ColumnConstraints percentWidth="34"/></columnConstraints>
+                        <VBox><Label text="CIRCULANDO" styleClass="metric-name"/><Label fx:id="semCirculandoLabel" text="0" styleClass="comparison-value"/></VBox>
+                        <VBox GridPane.columnIndex="1"><Label text="VELOCIDADE" styleClass="metric-name"/><Label fx:id="semVelocidadeLabel" text="0 km/h" styleClass="comparison-value"/></VBox>
+                        <VBox GridPane.columnIndex="2"><Label text="OCUPAÇÃO" styleClass="metric-name"/><Label fx:id="semOcupacaoLabel" text="0%" styleClass="comparison-value"/></VBox>
                     </GridPane>
-                    <VBox spacing="8" styleClass="panel,side-panel">
-                        <Label text="RODÍZIO" styleClass="section-kicker"/>
-                        <HBox><Label text="Estado" styleClass="side-key"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="rodizioLabel" text="DESATIVADO" styleClass="side-value"/></HBox>
-                        <HBox><Label text="Grupo restrito" styleClass="side-key"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="grupoLabel" text="NENHUM" styleClass="side-value"/></HBox>
-                        <HBox><Label text="Veículos restritos" styleClass="side-key"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="restritosLabel" text="0" styleClass="side-value"/></HBox>
-                    </VBox>
-                    <VBox spacing="9" styleClass="panel,side-panel">
-                        <Label text="OCUPAÇÃO POR REGIÃO" styleClass="section-kicker"/>
-                        <HBox><Label text="NORTE" styleClass="region-name"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="norteLabel" text="0%"/></HBox><ProgressBar fx:id="norteBar" maxWidth="Infinity" progress="0"/>
-                        <HBox><Label text="LESTE" styleClass="region-name"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="lesteLabel" text="0%"/></HBox><ProgressBar fx:id="lesteBar" maxWidth="Infinity" progress="0"/>
-                        <HBox><Label text="CENTRO" styleClass="region-name"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="centroLabel" text="0%"/></HBox><ProgressBar fx:id="centroBar" maxWidth="Infinity" progress="0"/>
-                        <HBox><Label text="SUL" styleClass="region-name"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="sulLabel" text="0%"/></HBox><ProgressBar fx:id="sulBar" maxWidth="Infinity" progress="0"/>
-                    </VBox>
                 </VBox>
-            </ScrollPane>
-            <padding><Insets top="14" right="14" bottom="8" left="14"/></padding>
-        </HBox>
+                <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="comparison-side">
+                    <Label text="COM RODÍZIO" styleClass="comparison-title"/>
+                    <StackPane fx:id="mapaComHost" VBox.vgrow="ALWAYS" styleClass="panel,map-panel"/>
+                    <GridPane hgap="12" styleClass="comparison-metrics">
+                        <columnConstraints><ColumnConstraints percentWidth="33"/><ColumnConstraints percentWidth="33"/><ColumnConstraints percentWidth="34"/></columnConstraints>
+                        <VBox><Label text="CIRCULANDO" styleClass="metric-name"/><Label fx:id="comCirculandoLabel" text="0" styleClass="comparison-value"/></VBox>
+                        <VBox GridPane.columnIndex="1"><Label text="VELOCIDADE" styleClass="metric-name"/><Label fx:id="comVelocidadeLabel" text="0 km/h" styleClass="comparison-value"/></VBox>
+                        <VBox GridPane.columnIndex="2"><Label text="OCUPAÇÃO" styleClass="metric-name"/><Label fx:id="comOcupacaoLabel" text="0%" styleClass="comparison-value"/></VBox>
+                    </GridPane>
+                </VBox>
+            </HBox>
+            <padding><Insets top="12" right="14" bottom="8" left="14"/></padding>
+        </StackPane>
     </center>
     <bottom>
-        <VBox spacing="9" styleClass="control-deck">
-            <HBox spacing="12" alignment="CENTER_LEFT">
-                <Label text="05h"/><Label text="PICO 06:30–08:00" styleClass="peak-label"/><Region HBox.hgrow="ALWAYS"/>
-                <Label text="12h"/><Region HBox.hgrow="ALWAYS"/><Label text="PICO 17:00–19:00" styleClass="peak-label"/><Label text="23h"/>
+        <VBox spacing="7" styleClass="control-deck">
+            <HBox alignment="CENTER_LEFT">
+                <Label text="05:00"/><Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="timelineSelecionadaLabel" text="Dia 01 • 05:00" styleClass="top-value"/>
+                <Region HBox.hgrow="ALWAYS"/><Label text="23:00"/>
             </HBox>
-            <ProgressBar fx:id="timelineBar" maxWidth="Infinity" progress="0" styleClass="timeline"/>
+            <Slider fx:id="timelineSlider" min="0" max="2160" value="0" blockIncrement="10" maxWidth="Infinity" styleClass="timeline-slider"/>
+            <ProgressBar fx:id="processadoBar" maxWidth="Infinity" progress="0" styleClass="processed-progress"/>
             <HBox spacing="8" alignment="CENTER_LEFT">
                 <Button fx:id="iniciarButton" text="INICIAR" onAction="#iniciarExecucao" styleClass="control-button"/>
                 <Button fx:id="pausarButton" text="PAUSAR" onAction="#pausar" styleClass="control-button"/>
                 <Button fx:id="continuarButton" text="CONTINUAR" onAction="#continuarExecucao" styleClass="control-button"/>
+                <Button fx:id="aoVivoButton" text="VOLTAR AO MAIS RECENTE" onAction="#voltarAoMaisRecente" styleClass="control-button"/>
                 <Button fx:id="pararButton" text="PARAR" onAction="#parar" styleClass="danger-button"/>
                 <Region HBox.hgrow="ALWAYS"/><Label text="VELOCIDADE" styleClass="metric-name"/>
                 <fx:define><ToggleGroup fx:id="velocidadeGroup"/></fx:define>

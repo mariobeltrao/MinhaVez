@@ -3,6 +3,7 @@ package br.com.minhavez.ui.runner;
 import br.com.minhavez.model.Cenario;
 import br.com.minhavez.service.GeradorCenario;
 import br.com.minhavez.ui.ConfiguracaoUi;
+import br.com.minhavez.ui.ResultadoExecucao;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.*;
@@ -23,8 +24,12 @@ class SimulacaoVisualRunnerTest {
         AtomicReference<String> threadSnapshot = new AtomicReference<>();
         AtomicReference<Throwable> erro = new AtomicReference<>();
         try {
-            runner.iniciar(base, new ConfiguracaoUi(4, 1, 7), snapshot -> {
+            runner.iniciar(base, new ConfiguracaoUi(4, 1, 7), snapshots -> {
                 threadSnapshot.set(Thread.currentThread().getName());
+                assertEquals(snapshots.semRodizio().diaAtual(), snapshots.comRodizio().diaAtual());
+                assertEquals(snapshots.semRodizio().tempoAtualSegundos(), snapshots.comRodizio().tempoAtualSegundos());
+                assertFalse(snapshots.semRodizio().rodizioAtivo());
+                assertTrue(snapshots.comRodizio().rodizioAtivo());
                 quantidade.incrementAndGet();
                 primeiroSnapshot.countDown();
                 if (aguardandoDepois.get()) snapshotDepoisDeContinuar.countDown();
@@ -40,7 +45,7 @@ class SimulacaoVisualRunnerTest {
             assertTrue(snapshotDepoisDeContinuar.await(2, TimeUnit.SECONDS));
             runner.parar(estado -> { });
             assertEquals(EstadoExecucao.PARADO, runner.getEstado());
-            assertEquals("minhavez-simulacao", threadSnapshot.get());
+            assertTrue(threadSnapshot.get().startsWith("minhavez-simulacao-"));
             assertNull(erro.get());
         } finally {
             runner.close();
@@ -51,5 +56,29 @@ class SimulacaoVisualRunnerTest {
         assertEquals(VelocidadeReproducao.X16, VelocidadeReproducao.porRotulo("16x"));
         assertEquals(0, VelocidadeReproducao.MAX.getIntervaloMilissegundos());
         assertThrows(IllegalArgumentException.class, () -> VelocidadeReproducao.porRotulo("32x"));
+    }
+
+    @Test void concluiOsDoisCenariosConcorrentesComAMesmaConfiguracao() throws Exception {
+        SimulacaoVisualRunner runner = new SimulacaoVisualRunner();
+        Cenario base = new GeradorCenario(8).gerarCenario(42, 1);
+        CountDownLatch concluido = new CountDownLatch(1);
+        AtomicReference<ResultadoExecucao> resultado = new AtomicReference<>();
+        AtomicReference<Throwable> erro = new AtomicReference<>();
+        try {
+            runner.iniciar(base, new ConfiguracaoUi(8, 1, 42), snapshot -> { }, mensagem -> { },
+                    estado -> { }, recebido -> {
+                        resultado.set(recebido);
+                        concluido.countDown();
+                    }, erro::set);
+
+            assertTrue(concluido.await(5, TimeUnit.SECONDS));
+            assertNull(erro.get());
+            assertNotNull(resultado.get());
+            assertFalse(resultado.get().semRodizio().isRodizioAtivo());
+            assertTrue(resultado.get().comRodizio().isRodizioAtivo());
+            assertEquals(EstadoExecucao.FINALIZADO, runner.getEstado());
+        } finally {
+            runner.close();
+        }
     }
 }
