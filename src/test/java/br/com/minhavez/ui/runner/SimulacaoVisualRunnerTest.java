@@ -1,0 +1,55 @@
+package br.com.minhavez.ui.runner;
+
+import br.com.minhavez.model.Cenario;
+import br.com.minhavez.service.GeradorCenario;
+import br.com.minhavez.ui.ConfiguracaoUi;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class SimulacaoVisualRunnerTest {
+    @Test void pausaContinuaEParaSemExecutarNaThreadChamadora() throws Exception {
+        SimulacaoVisualRunner runner = new SimulacaoVisualRunner();
+        runner.definirVelocidade(VelocidadeReproducao.X1);
+        Cenario base = new GeradorCenario(4).gerarCenario(7, 1);
+        CountDownLatch primeiroSnapshot = new CountDownLatch(1), snapshotDepoisDeContinuar = new CountDownLatch(1);
+        AtomicBoolean aguardandoDepois = new AtomicBoolean();
+        AtomicInteger quantidade = new AtomicInteger();
+        AtomicReference<String> threadSnapshot = new AtomicReference<>();
+        AtomicReference<Throwable> erro = new AtomicReference<>();
+        try {
+            runner.iniciar(base, new ConfiguracaoUi(4, 1, 7), snapshot -> {
+                threadSnapshot.set(Thread.currentThread().getName());
+                quantidade.incrementAndGet();
+                primeiroSnapshot.countDown();
+                if (aguardandoDepois.get()) snapshotDepoisDeContinuar.countDown();
+            }, mensagem -> { }, estado -> { }, resultado -> { }, erro::set);
+            assertTrue(primeiroSnapshot.await(2, TimeUnit.SECONDS));
+            runner.pausar(estado -> { });
+            int durantePausa = quantidade.get();
+            Thread.sleep(650);
+            assertEquals(durantePausa, quantidade.get());
+            assertEquals(EstadoExecucao.PAUSADO, runner.getEstado());
+            aguardandoDepois.set(true);
+            runner.continuar(estado -> { });
+            assertTrue(snapshotDepoisDeContinuar.await(2, TimeUnit.SECONDS));
+            runner.parar(estado -> { });
+            assertEquals(EstadoExecucao.PARADO, runner.getEstado());
+            assertEquals("minhavez-simulacao", threadSnapshot.get());
+            assertNull(erro.get());
+        } finally {
+            runner.close();
+        }
+    }
+
+    @Test void rotulosDeVelocidadeSaoEstaveis() {
+        assertEquals(VelocidadeReproducao.X16, VelocidadeReproducao.porRotulo("16x"));
+        assertEquals(0, VelocidadeReproducao.MAX.getIntervaloMilissegundos());
+        assertThrows(IllegalArgumentException.class, () -> VelocidadeReproducao.porRotulo("32x"));
+    }
+}

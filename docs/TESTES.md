@@ -2,7 +2,7 @@
 
 Os testes usam JUnit 5 e cenários pequenos quando é necessário conferir um resultado físico exato. Testes parametrizados contam cada entrada como uma execução. Os relatórios Maven completos ficam em `target/surefire-reports/`.
 
-Validação desta entrega: **54 testes executados, zero falhas, zero erros e zero testes ignorados**. A suíte cobre população configurável, polos de atração e métricas diagnósticas, com JDK 21 e Maven 3.9.9.
+Validação desta entrega: **59 testes executados, zero falhas, zero erros e zero testes ignorados**. A suíte cobre população configurável, polos de atração, métricas diagnósticas, snapshots e execução visual assíncrona, com JDK 21 e Maven 3.9.9.
 
 | Requisito do pedido | Teste responsável |
 |---|---|
@@ -21,6 +21,9 @@ Validação desta entrega: **54 testes executados, zero falhas, zero erros e zer
 | 24: tempo restante entre vias | `SimulacaoTest.tempoRestanteAtravessaViasComVelocidadesDiferentes` |
 | 25–26: não iniciar às 23h, concluir trajetos em andamento | `SimulacaoTest.naoIniciaAs23MasConcluiViagemEmAndamento`, `naoComecaVoltaQuandoIdaSoTerminaDepoisDas23` |
 | 27: preservar cenário-base | `GeradorCenarioTest.copiaLimpaNaoCompartilhaObjetosMutaveis`, `SimulacaoTest.comparaCenariosSemContaminarBaseERespeitaCiclo` |
+| Snapshot imutável e fiel ao estado do motor | `FabricaSnapshotTest` |
+| Observação por tick sem alterar o fluxo da simulação | `SimulacaoObserverTest` |
+| Pausar, continuar e encerrar fora da thread JavaFX | `SimulacaoVisualRunnerTest` |
 
 Também são verificados estados e posições do veículo, proteção das coleções, grafos desconectados, médias ponderadas (viagens, movimento e amostras), categorias regionais, séries imutáveis, base zero e interpretação textual nas variações, seção de configuração e terminal interativo/por argumentos.
 
@@ -30,6 +33,7 @@ Os testes `ordemDosVeiculosNaoAlteraMovimentoOuResultados` e `movimentoCongestio
 
 ```shell
 mvn clean test package
+mvn javafx:run
 java -jar target/minha-vez-0.0.jar 1 12345 --resumo
 java -jar target/minha-vez-0.0.jar 28 12345 --resumo
 ```

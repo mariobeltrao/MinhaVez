@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.com.minhavez.ui.controller.ResultadoController" styleClass="app-background">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
+            <VBox><Label text="COMPARAÇÃO FINAL" styleClass="top-brand"/><Label fx:id="periodoLabel" styleClass="status-message"/></VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="NOVA SIMULAÇÃO" onAction="#novaSimulacao" styleClass="primary-button"/>
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="results-scroll">
+            <VBox spacing="22" styleClass="results-content">
+                <VBox spacing="10"><Label text="INDICADORES PRINCIPAIS" styleClass="section-kicker"/><GridPane fx:id="metricasGrid" hgap="10" vgap="10"/></VBox>
+                <VBox spacing="10" styleClass="panel,result-section">
+                    <Label text="VEÍCULOS EM CIRCULAÇÃO × HORÁRIO" styleClass="section-kicker"/>
+                    <LineChart fx:id="circulacaoChart" prefHeight="300"><xAxis><CategoryAxis label="Dia e horário"/></xAxis><yAxis><NumberAxis label="Veículos" forceZeroInRange="true"/></yAxis></LineChart>
+                </VBox>
+                <VBox spacing="10" styleClass="panel,result-section">
+                    <Label text="VELOCIDADE × HORÁRIO" styleClass="section-kicker"/>
+                    <LineChart fx:id="velocidadeChart" prefHeight="300"><xAxis><CategoryAxis label="Dia e horário"/></xAxis><yAxis><NumberAxis label="km/h" forceZeroInRange="true"/></yAxis></LineChart>
+                </VBox>
+                <VBox spacing="10" styleClass="panel,result-section">
+                    <Label text="OCUPAÇÃO × HORÁRIO" styleClass="section-kicker"/>
+                    <LineChart fx:id="ocupacaoChart" prefHeight="300"><xAxis><CategoryAxis label="Dia e horário"/></xAxis><yAxis><NumberAxis label="Ocupação (%)" forceZeroInRange="true"/></yAxis></LineChart>
+                </VBox>
+                <HBox spacing="14">
+                    <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="panel,result-section">
+                        <Label text="COMPARAÇÃO POR REGIÃO" styleClass="section-kicker"/>
+                        <GridPane fx:id="regioesGrid" hgap="36" vgap="10">
+                            <columnConstraints><ColumnConstraints hgrow="ALWAYS"/><ColumnConstraints minWidth="100"/><ColumnConstraints minWidth="100"/></columnConstraints>
+                            <Label text="REGIÃO" GridPane.columnIndex="0" styleClass="metric-name"/>
+                            <Label text="SEM" GridPane.columnIndex="1" styleClass="metric-name"/>
+                            <Label text="COM" GridPane.columnIndex="2" styleClass="metric-name"/>
+                        </GridPane>
+                    </VBox>
+                </HBox>
+                <VBox spacing="10" styleClass="panel,result-section">
+                    <Label text="VIAS MAIS UTILIZADAS / PRESSIONADAS" styleClass="section-kicker"/>
+                    <TableView fx:id="viasTable" prefHeight="460">
+                        <columns>
+                            <TableColumn fx:id="cenarioColumn" text="Cenário" prefWidth="90"/>
+                            <TableColumn fx:id="viaColumn" text="Via" prefWidth="130"/>
+                            <TableColumn fx:id="ocupacaoMediaColumn" text="Ocup. média (%)" prefWidth="150"/>
+                            <TableColumn fx:id="ocupacaoMaximaColumn" text="Ocup. máxima (%)" prefWidth="160"/>
+                            <TableColumn fx:id="entradasColumn" text="Entradas" prefWidth="130"/>
+                            <TableColumn fx:id="tempoAcimaColumn" text="Tempo &gt;100% (%)" prefWidth="160"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+                <Label text="Resultados produzidos pelo motor da simulação. Parâmetros fictícios; não representam o trânsito real."
+                       styleClass="disclaimer"/>
+                <padding><Insets top="18" right="22" bottom="30" left="22"/></padding>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="br.com.minhavez.ui.controller.InicioController" styleClass="app-background">
+    <VBox maxWidth="760" spacing="28" alignment="CENTER" styleClass="inicio-shell">
+        <VBox spacing="6" alignment="CENTER">
+            <Label text="MINHA VEZ" styleClass="brand-title"/>
+            <Label text="SIMULADOR DE MOBILIDADE URBANA" styleClass="brand-subtitle"/>
+        </VBox>
+
+        <VBox spacing="20" styleClass="panel,form-panel">
+            <Label text="CONFIGURAÇÃO DA EXECUÇÃO" styleClass="section-kicker"/>
+            <GridPane hgap="18" vgap="12">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="190" halignment="RIGHT"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                <Label text="Quantidade de veículos" GridPane.rowIndex="0" styleClass="field-label"/>
+                <TextField fx:id="veiculosField" text="1000" promptText="1000" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Período" GridPane.rowIndex="1" styleClass="field-label"/>
+                <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <fx:define><ToggleGroup fx:id="periodoGroup"/></fx:define>
+                    <RadioButton text="1 dia" userData="1" toggleGroup="$periodoGroup"/>
+                    <RadioButton text="7 dias" userData="7" toggleGroup="$periodoGroup"/>
+                    <RadioButton text="28 dias" userData="28" toggleGroup="$periodoGroup" selected="true"/>
+                </HBox>
+                <Label text="Seed" GridPane.rowIndex="2" styleClass="field-label"/>
+                <TextField fx:id="seedField" text="12345" promptText="12345" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+            <Label fx:id="erroLabel" wrapText="true" styleClass="error-label"/>
+            <Button text="INICIAR SIMULAÇÃO" maxWidth="Infinity" onAction="#iniciar" styleClass="primary-button"/>
+        </VBox>
+
+        <HBox spacing="44" alignment="CENTER" styleClass="facts-row">
+            <VBox alignment="CENTER"><Label text="40" styleClass="fact-value"/><Label text="PONTOS" styleClass="fact-label"/></VBox>
+            <VBox alignment="CENTER"><Label text="64" styleClass="fact-value"/><Label text="VIAS" styleClass="fact-label"/></VBox>
+            <VBox alignment="CENTER"><Label text="4" styleClass="fact-value"/><Label text="REGIÕES" styleClass="fact-label"/></VBox>
+            <VBox alignment="CENTER"><Label text="DIJKSTRA" styleClass="fact-value-small"/><Label text="ROTAS" styleClass="fact-label"/></VBox>
+        </HBox>
+
+        <Label text="Cidade fictícia inspirada conceitualmente em João Pessoa/PB.&#10;Os parâmetros utilizados não representam o trânsito real."
+               textAlignment="CENTER" wrapText="true" styleClass="disclaimer"/>
+        <padding><Insets top="42" right="42" bottom="42" left="42"/></padding>
+    </VBox>
+</StackPane>

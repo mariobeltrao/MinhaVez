@@ -1,0 +1,124 @@
+.root {
+    -mv-bg: #0a111d;
+    -mv-surface: #111c2a;
+    -mv-surface-alt: #172536;
+    -mv-border: #293b50;
+    -mv-primary: #39c6d8;
+    -mv-primary-hover: #67d8e5;
+    -mv-text: #e8f0f7;
+    -mv-muted: #8fa4b8;
+    -mv-danger: #ff6b75;
+    -mv-free: #42c987;
+    -mv-moderate: #d7c64a;
+    -mv-intense: #ef9f43;
+    -mv-congested: #eb5b55;
+    -mv-severe: #a93247;
+    -mv-collapse: #702a61;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: -mv-text;
+}
+
+.app-background { -fx-background-color: -mv-bg; }
+.inicio-shell { -fx-background-color: transparent; }
+.brand-title { -fx-font-size: 48px; -fx-font-weight: 800; -fx-letter-spacing: 7px; -fx-text-fill: -mv-text; }
+.brand-subtitle, .section-kicker { -fx-text-fill: -mv-primary; -fx-font-weight: 700; -fx-letter-spacing: 2px; }
+.panel { -fx-background-color: -mv-surface; -fx-background-radius: 12px; -fx-border-color: -mv-border; -fx-border-radius: 12px; }
+.form-panel { -fx-padding: 28px 34px; }
+.field-label { -fx-text-fill: -mv-muted; -fx-font-weight: 600; }
+.label, .radio-button { -fx-text-fill: -mv-text; }
+.text-field {
+    -fx-background-color: -mv-bg;
+    -fx-border-color: -mv-border;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: -mv-text;
+    -fx-prompt-text-fill: -mv-muted;
+    -fx-padding: 10px 12px;
+}
+.text-field:focused { -fx-border-color: -mv-primary; }
+.radio-button .radio { -fx-background-color: -mv-bg; -fx-border-color: -mv-border; -fx-border-radius: 20px; }
+.radio-button:selected .dot { -fx-background-color: -mv-primary; }
+.button { -fx-cursor: hand; }
+.primary-button {
+    -fx-background-color: -mv-primary;
+    -fx-text-fill: #07131c;
+    -fx-font-weight: 800;
+    -fx-padding: 12px 18px;
+    -fx-background-radius: 7px;
+}
+.primary-button:hover { -fx-background-color: -mv-primary-hover; }
+.error-label { -fx-text-fill: -mv-danger; -fx-min-height: 20px; }
+.facts-row { -fx-padding: 4px; }
+.fact-value { -fx-font-size: 24px; -fx-font-weight: 800; -fx-text-fill: -mv-primary; }
+.fact-value-small { -fx-font-size: 16px; -fx-font-weight: 800; -fx-text-fill: -mv-primary; }
+.fact-label, .disclaimer { -fx-text-fill: -mv-muted; -fx-font-size: 12px; }
+
+.simulation-root { -fx-padding: 0; }
+.topbar { -fx-background-color: -mv-surface; -fx-padding: 14px 20px 10px; -fx-border-color: transparent transparent -mv-border transparent; }
+.top-brand { -fx-font-size: 22px; -fx-font-weight: 800; -fx-letter-spacing: 3px; }
+.top-value { -fx-font-weight: 700; }
+.clock-value { -fx-font-size: 22px; -fx-font-weight: 800; -fx-text-fill: -mv-primary; }
+.scenario-badge, .state-badge { -fx-background-color: -mv-surface-alt; -fx-padding: 6px 10px; -fx-background-radius: 5px; -fx-font-weight: 700; }
+.state-badge { -fx-text-fill: -mv-primary; }
+.status-message { -fx-text-fill: -mv-muted; }
+.map-panel { -fx-padding: 8px; }
+.mapa-cidade { -fx-background-color: #0d1724; -fx-background-radius: 9px; }
+.mapa-regiao { -fx-text-fill: #61788e; -fx-font-size: 12px; -fx-font-weight: 800; -fx-letter-spacing: 2px; }
+.via-line { -fx-stroke-line-cap: round; }
+.via-principal { -fx-stroke-width: 4px; }
+.via-secundaria { -fx-stroke-width: 2px; }
+.via-hover { -fx-stroke: transparent; -fx-stroke-width: 14px; }
+.estado-livre .via-line { -fx-stroke: -mv-free; }
+.estado-moderado .via-line { -fx-stroke: -mv-moderate; }
+.estado-intenso .via-line { -fx-stroke: -mv-intense; }
+.estado-congestionado .via-line { -fx-stroke: -mv-congested; }
+.estado-severo .via-line { -fx-stroke: -mv-severe; }
+.estado-colapso .via-line { -fx-stroke: -mv-collapse; }
+.ponto-circle { -fx-fill: -mv-text; -fx-stroke: -mv-bg; -fx-stroke-width: 2px; }
+.ponto-label { -fx-fill: -mv-muted; -fx-font-size: 9px; }
+.veiculo-marker { -fx-fill: -mv-primary; -fx-stroke: #d9fbff; -fx-stroke-width: 0.7px; }
+.sidebar-scroll, .sidebar-scroll > .viewport { -fx-background-color: transparent; }
+.sidebar { -fx-padding: 2px 8px 12px 2px; }
+.metric-card { -fx-background-color: -mv-surface; -fx-border-color: -mv-border; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 13px; -fx-spacing: 7px; }
+.metric-name { -fx-text-fill: -mv-muted; -fx-font-size: 10px; -fx-font-weight: 700; }
+.metric-value { -fx-font-size: 27px; -fx-font-weight: 800; }
+.metric-value-small { -fx-font-size: 18px; -fx-font-weight: 800; }
+.side-panel { -fx-padding: 16px; }
+.side-key { -fx-text-fill: -mv-muted; }
+.side-value, .region-name { -fx-font-weight: 700; }
+.progress-bar > .track { -fx-background-color: -mv-bg; -fx-background-radius: 3px; }
+.progress-bar > .bar { -fx-background-color: -mv-primary; -fx-background-radius: 3px; -fx-padding: 3px; }
+.control-deck { -fx-background-color: -mv-surface; -fx-padding: 10px 18px 14px; -fx-border-color: -mv-border transparent transparent transparent; }
+.peak-label { -fx-text-fill: -mv-primary; -fx-font-size: 10px; }
+.control-button, .danger-button, .speed-button { -fx-background-color: -mv-surface-alt; -fx-text-fill: -mv-text; -fx-padding: 8px 12px; -fx-background-radius: 5px; -fx-font-weight: 700; }
+.control-button:hover, .speed-button:hover, .speed-button:selected { -fx-background-color: -mv-primary; -fx-text-fill: #07131c; }
+.danger-button { -fx-text-fill: -mv-danger; }
+.danger-button:hover { -fx-background-color: -mv-danger; -fx-text-fill: #07131c; }
+.timeline > .bar { -fx-padding: 4px; }
+.tooltip { -fx-background-color: -mv-surface-alt; -fx-text-fill: -mv-text; -fx-font-size: 12px; }
+
+.results-scroll, .results-scroll > .viewport { -fx-background-color: -mv-bg; }
+.results-content { -fx-background-color: -mv-bg; }
+.result-card { -fx-background-color: -mv-surface; -fx-border-color: -mv-border; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 14px; -fx-min-width: 190px; }
+.result-sem { -fx-text-fill: -mv-muted; -fx-font-weight: 700; }
+.result-com { -fx-text-fill: -mv-text; -fx-font-size: 16px; -fx-font-weight: 800; }
+.variation-good { -fx-text-fill: -mv-free; -fx-font-weight: 800; }
+.variation-alert { -fx-text-fill: -mv-intense; -fx-font-weight: 800; }
+.result-section { -fx-padding: 18px; }
+.chart { -fx-background-color: transparent; }
+.chart-plot-background { -fx-background-color: -mv-bg; }
+.chart-vertical-grid-lines, .chart-horizontal-grid-lines { -fx-stroke: -mv-border; -fx-opacity: 0.55; }
+.axis { -fx-tick-label-fill: -mv-muted; }
+.axis-label { -fx-text-fill: -mv-muted; }
+.chart-series-line { -fx-stroke-width: 2px; }
+.default-color0.chart-series-line { -fx-stroke: -mv-muted; }
+.default-color1.chart-series-line { -fx-stroke: -mv-primary; }
+.chart-legend { -fx-background-color: transparent; }
+.chart-legend-item { -fx-text-fill: -mv-text; }
+.table-view { -fx-background-color: -mv-bg; -fx-border-color: -mv-border; }
+.table-view .column-header-background, .table-view .column-header { -fx-background-color: -mv-surface-alt; }
+.table-view .column-header .label { -fx-text-fill: -mv-muted; }
+.table-row-cell { -fx-background-color: -mv-surface; -fx-border-color: transparent transparent -mv-border transparent; }
+.table-row-cell:odd { -fx-background-color: #142130; }
+.table-cell { -fx-text-fill: -mv-text; }

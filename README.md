@@ -1,6 +1,6 @@
 # Minha Vez
 
-Simulador acadêmico de rodízio de veículos, desenvolvido em **Java 21**, **Maven** e **JUnit 5**. A V1 funciona exclusivamente no terminal, sem dependências de produção externas.
+Simulador acadêmico de rodízio de veículos, desenvolvido em **Java 21**, **JavaFX**, **Maven** e **JUnit 5**. A versão 0.0 oferece uma interface gráfica para acompanhar e comparar os cenários, mantendo também a execução pelo terminal.
 
 O experimento compara a mesma população **SEM rodízio** e **COM rodízio**, para investigar o impacto de restringir grupos de veículos sobre o fluxo de uma cidade fictícia. João Pessoa/PB é apenas uma inspiração conceitual e visual: não são usadas ruas, GPS, mapas, dados de frota ou informações reais de trânsito e infraestrutura.
 
@@ -13,6 +13,16 @@ mvn test
 mvn package
 java -jar target/minha-vez-0.0.jar
 ```
+
+Para abrir a interface gráfica:
+
+```shell
+mvn javafx:run
+```
+
+Na tela inicial, escolha a população, o período de 1, 7 ou 28 dias e a seed. A simulação executa primeiro o cenário **SEM rodízio** e depois o cenário **COM rodízio**, sempre com a mesma população-base. O painel permite pausar, continuar ou encerrar a execução e selecionar velocidades de 1×, 2×, 4×, 8×, 16× ou máxima. Ao final, a tela de resultados apresenta métricas comparativas, séries temporais reais, ocupação regional e as vias mais utilizadas.
+
+O mapa da interface representa o grafo fictício de 40 pontos e 64 vias. As cores das vias indicam `LIVRE`, `MODERADO`, `INTENSO`, `CONGESTIONADO`, `SEVERO` e `COLAPSO`; os veículos mostrados são uma amostra visual determinística de até 125 unidades, enquanto todas as unidades continuam sendo processadas pelo motor.
 
 Sem argumentos, o programa oferece um menu para **1, 7 ou 28 dias** e pede a seed. Enter usa 28 dias e seed 12345. Também é possível executar diretamente:
 
@@ -148,9 +158,11 @@ A calibração aumenta a pressão de forma geral, sem multiplicadores condiciona
 | `service` | Topologia (`FabricaCidade`), geração por seed, Dijkstra, rodízio e relatório |
 | `simulation` | Motor em fases (`Simulacao`) e acumulação de métricas (`ColetorMetricas`) |
 | `result` | Dados diários e agregações do período |
+| `snapshot` | Retrato imutável e desacoplado de cada tick para observadores externos |
+| `ui` | Aplicação JavaFX, controladores, mapa e executor assíncrono da simulação |
 | `Main` | Entrada, progresso e apresentação pelo terminal |
 
-`FabricaCidade` é a única classe adicional de produção em relação à estrutura sugerida: separa as 64 ligações fixas do sorteio da população. A simulação copia automaticamente o cenário recebido, preservando a base e permitindo executar a mesma instância novamente com o estado diário reiniciado. `Cenario.copiarParaExecucao()` também fica disponível para uso explícito.
+`FabricaCidade` separa as 64 ligações fixas do sorteio da população. A simulação copia automaticamente o cenário recebido, preservando a base e permitindo executar a mesma instância novamente com o estado diário reiniciado. `Cenario.copiarParaExecucao()` também fica disponível para uso explícito. A interface recebe somente snapshots imutáveis; ela não altera o modelo nem executa o motor na thread visual. O modo terminal continua usando a mesma API anterior.
 
 Sequência de leitura sugerida: `Ponto`/`Via` → `Cidade`/`FabricaCidade` → `Rota`/`CalculadorRotas` → `Veiculo` → `GeradorCenario`/`Cenario`/`SistemaRodizio` → `Simulacao`/`ColetorMetricas` → resultados/relatório → `Main`.
 
@@ -160,12 +172,12 @@ Sequência de leitura sugerida: `Ponto`/`Via` → `Cidade`/`FabricaCidade` → `
 mvn test
 ```
 
-Os testes cobrem topologia, limites das faixas de ocupação, Dijkstra, reprodutibilidade, cópias independentes, população, ciclo do rodízio, estados, métricas, terminal e integração para 1/7/28 dias. Há cenários controlados com sobrecarga para validar velocidades, partidas simultâneas, alteração de rota na volta, ausência de recálculo no percurso, movimento entre vias e encerramento às 23h. Veja [docs/TESTES.md](docs/TESTES.md) para o mapeamento dos requisitos.
+Os 59 testes cobrem topologia, limites das faixas de ocupação, Dijkstra, reprodutibilidade, cópias independentes, população, ciclo do rodízio, estados, métricas, terminal, snapshots, controle assíncrono e integração para 1/7/28 dias. Há cenários controlados com sobrecarga para validar velocidades, partidas simultâneas, alteração de rota na volta, ausência de recálculo no percurso, movimento entre vias e encerramento às 23h. Veja [docs/TESTES.md](docs/TESTES.md) para o mapeamento dos requisitos.
 
-## Limitações da V1 e evoluções possíveis
+## Limitações atuais e evoluções possíveis
 
-A V1 é determinística para uma seed e usa rotinas fixas. Não modela cruzamentos, semáforos, aceleração, veículos especiais, alternativas de transporte ou mudanças de comportamento causadas pelo rodízio. A amostragem a cada 30 segundos pode não capturar picos que ocorram inteiramente dentro de um tick. A média das vias dá o mesmo peso a cada via, independentemente do comprimento e da capacidade, conforme a especificação.
+A versão 0.0 é determinística para uma seed e usa rotinas fixas. Não modela cruzamentos, semáforos, aceleração, veículos especiais, alternativas de transporte ou mudanças de comportamento causadas pelo rodízio. A amostragem a cada 30 segundos pode não capturar picos que ocorram inteiramente dentro de um tick. A média das vias dá o mesmo peso a cada via, independentemente do comprimento e da capacidade, conforme a especificação.
 
-Não há GUI, JavaFX/Swing, mapas reais, banco de dados, persistência, servidor, API, Spring, frontend ou aprendizado de máquina. Séries temporais ficam em memória e são descartadas quando o programa termina.
+Não há mapas reais, banco de dados, persistência, servidor, API, Spring ou aprendizado de máquina. A interface JavaFX é uma visualização local do grafo fictício; séries temporais e resultados ficam em memória e são descartados quando o programa termina.
 
-Evoluções futuras possíveis incluem exportação de métricas, visualização do grafo, análise de sensibilidade dos parâmetros e múltiplas seeds, comparação pareada das mesmas viagens e, em uma versão posterior, interface gráfica. Nada disso é necessário para executar a V1.
+Evoluções futuras possíveis incluem exportação de métricas, análise de sensibilidade dos parâmetros e múltiplas seeds, comparação pareada das mesmas viagens e persistência de resultados.

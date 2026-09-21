@@ -4,7 +4,9 @@ import br.com.minhavez.enums.EstadoVeiculo;
 import br.com.minhavez.model.*;
 import br.com.minhavez.result.*;
 import br.com.minhavez.service.*;
+import br.com.minhavez.snapshot.*;
 import java.util.*;
+import java.util.concurrent.CancellationException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -24,6 +26,7 @@ public final class Simulacao {
     private final boolean rodizioAtivo;
     private final SistemaRodizio sistemaRodizio = new SistemaRodizio();
     private final CalculadorRotas calculadorRotas;
+    private final FabricaSnapshot fabricaSnapshot = new FabricaSnapshot();
     private ColetorMetricas coletorMetricas;
     private long tempoAtualSegundos;
 
@@ -40,19 +43,31 @@ public final class Simulacao {
     }
     public ResultadoSimulacao executar() { return executar((tempo, circulando) -> { }, dia -> { }); }
 
+    /** Entrega uma cópia imutável a cada tick; o observador continua independente de JavaFX. */
+    public ResultadoSimulacao executar(SimulacaoObserver observer) {
+        return executar((tempo, circulando) -> { }, dia -> { }, observer);
+    }
+
     /** Observadores opcionais permitem ao terminal exibir progresso sem controlar a física. */
     public ResultadoSimulacao executar(BiConsumer<Long, Integer> aCadaExibicao, Consumer<ResultadoDia> aoFinalDoDia) {
+        return executar(aCadaExibicao, aoFinalDoDia, SimulacaoObserver.IGNORAR);
+    }
+
+    public ResultadoSimulacao executar(BiConsumer<Long, Integer> aCadaExibicao,
+                                       Consumer<ResultadoDia> aoFinalDoDia, SimulacaoObserver observer) {
         Objects.requireNonNull(aCadaExibicao);
         Objects.requireNonNull(aoFinalDoDia);
+        Objects.requireNonNull(observer);
         ResultadoSimulacao resultado = new ResultadoSimulacao(rodizioAtivo);
         for (int dia = 0; dia < cenario.getQuantidadeDias(); dia++) {
             prepararDia(dia);
             while (true) {
+                if (Thread.currentThread().isInterrupted()) throw new CancellationException("Simulação interrompida");
                 if (tempoAtualSegundos == FIM_NOVOS_EVENTOS_SEGUNDOS) {
                     coletorMetricas.registrarVeiculosEmCirculacaoAs23h(contarVeiculosEmMovimento());
                 }
                 if (tempoAtualSegundos >= FIM_NOVOS_EVENTOS_SEGUNDOS && contarVeiculosEmMovimento() == 0) break;
-                processarTick();
+                processarTick(dia, observer);
                 if ((tempoAtualSegundos - INICIO_DIA_SEGUNDOS) % INTERVALO_EXIBICAO_SEGUNDOS == 0) {
                     aCadaExibicao.accept(tempoAtualSegundos, contarVeiculosEmMovimento());
                 }
@@ -76,7 +91,7 @@ public final class Simulacao {
             }
         }
     }
-    private void processarTick() {
+    private void processarTick(int dia, SimulacaoObserver observer) {
         // Fases de decisão: nenhuma ocupação muda enquanto as rotas são calculadas.
         if (tempoAtualSegundos < FIM_NOVOS_EVENTOS_SEGUNDOS) iniciarViagensProgramadas();
         Map<Via, Double> velocidades = new HashMap<>();
@@ -96,6 +111,8 @@ public final class Simulacao {
         coletorMetricas.registrarMovimento(distanciaTick, segundosTick);
         tempoAtualSegundos += PASSO_SIMULACAO_SEGUNDOS;
         coletorMetricas.registrarAmostra(tempoAtualSegundos, cenario.getCidade(), cenario.getVeiculos(), distanciaTick, segundosTick);
+        observer.aoAtualizar(fabricaSnapshot.criar(dia, cenario.getQuantidadeDias(), tempoAtualSegundos,
+                rodizioAtivo, cenario.getCidade(), cenario.getVeiculos(), distanciaTick, segundosTick));
     }
     private void iniciarViagensProgramadas() {
         List<Partida> partidas = new ArrayList<>();
